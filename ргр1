@@ -1,0 +1,216 @@
+import math
+from tkinter import *
+
+# переменные
+
+font_frame = ("Comic Sans MS", 20, "bold")  # шрифт окон
+
+summa = 0
+summa_1 = 0
+summa_2 = 0
+summa_T0 = 0
+summa_T1 = 0
+summa_M = 0
+summa_L = 0
+summa_All = 0
+
+T0 = []
+T1 = []
+M = []
+All = []
+L = []
+
+count = 0  # счетчик
+
+# вспомогательная переменная для проверки на принадлежность к классу L
+q = -1
+
+# вспомогательные массивы
+m1 = []
+m2 = []
+m3 = []
+m4 = []
+
+
+def click_button():
+    global count  # поиск count по всему коду
+    a = int(entry.get())  # перевод значения из окна ввода в целочисленный тип данных
+
+    # main_part
+
+    # если введен 0
+    if a == 0 or a < 0:
+        if count == 1:
+            label.destroy()
+            count = 0
+        label_1 = Label(frame, text='Введите n большее, чем 0', width=50, height=5, bg='#7AC5CD', fg='black', font=font_frame)
+        label_1.pack()
+        count += 1
+
+    # если ввод корректный
+    else:
+        frame.destroy()  # удаление начального окна для ввода кол-ва ф-ий
+        frame_1 = Tk()  # появление окна для ввода ф-ий
+        frame_1.configure(bg='#8B7B8B')
+        label1 = Label(frame_1, text='Введите функции:', width=60, height=3, bg='#EED2EE',
+                       fg='black', font=font_frame)
+        label1.pack()
+
+        # определение кол-ва полей ввода
+        for i in range(0, a):
+            label_2 = Label(frame_1, text=f'Ввод булевой функции {i + 1} (состоит из 0 и 1):', bg='#8B7B8B')
+            label_2.pack(anchor='nw', padx=230)
+            entry_1 = Entry(frame_1, bg='#DECDF5')
+            entry_1.pack(anchor='center')
+            m1.append(entry_1)
+        btn1 = Button(frame_1, text='OK', command=click_button_1, bg='#CDB5CD', anchor='s')
+        btn1.pack()
+
+
+def click_button_1():
+    for i in range(0, len(m1)):
+            m3.append(list(m1[i].get()))
+            m2.append(list(m1[i].get()))
+            # проверка числа элементов (все векторы имеют длину, равную степени 2)
+            for i in range(0, len(m1)):
+                a = math.log(len(m2[i]), 2)
+                # проверка целочисленности
+                if a.is_integer() is False or a == 0.0:
+                    frame_4 = Tk()
+                    frame_4.configure(bg='#8B7B8B')
+                    label_3 = Label(frame_4, text='Неверная форма ввода булевых функций', width=50, height=5, bg='#7AC5CD', fg='black', font=font_frame)
+                    label_3.pack()
+                    break
+        # проверка, что ввели только нули и единицы
+    for i in range(0, len(m1)):
+        for j in range(0, len(m2[i])):
+            if int(m2[i][j]) != 0 and int(m2[i][j]) != 1:
+                frame_4 = Tk()
+                frame_4.configure(bg='#8B7B8B')
+                label_3 = Label(frame_4, text="Неверная форма ввода булевых функций", width=50, height=5,
+                               bg="#7AC5CD", fg="black", font=font_frame)
+                label_3.pack()
+                break
+# проверка на принадлежность к классам Поста
+    # класс T0
+    for i in range(0, len(m1)):
+        if int(m2[i][0]) == 0:
+            T0.append(1)
+        else:
+            T0.append(0)
+    print('T0', T0)
+    # класс S
+    for i in range(0, len(m1)):
+        for j in range(0, len(m2[i]) // 2):
+            global summa
+            global All
+
+            # проверка противоположных значений
+            if (int(m2[i][j]) + int(m2[i][len(m2[i]) - (j + 1)])) == 1:
+                summa += 1
+        if summa == (len(m2[i]) // 2):
+            All.append(1)
+            summa = 0
+        else:
+            All.append(0)
+            summa = 0
+    print('S', All, sep='  ')
+
+    # класс T1
+    for i in range(0, len(m1)):
+        if int(m2[i][len(m2[i]) - 1]) == 0:
+            T1.append(0)
+        else:
+            T1.append(1)
+    print('T1', T1)
+
+    # класс M
+    for i in range(0, len(m1)):
+        c = (''.join(m2[i]))
+        n = int(math.log(len(m2[i]), 2))
+
+        def Monoton(c, n):  # проверка на монотонность
+            s = 2 ** n
+            for k in range(0, s - 1):
+                for j in range(k + 1, s):
+                    if (k & j) == k and int(m2[i][k]) > int(m2[i][j]):
+                        return 0
+            return 1
+
+        M.append(Monoton(c, n))
+    print('M', M, sep='  ')
+
+    # класс L
+    for i in range(0, len(m1)):  # находим полином Жегалкина
+        global q
+        for k in range(0, len(m2[i])):
+            q += 1
+            for j in range(len(m2[i]) - 1, q, - 1):
+                m2[i][j] = (int(m2[i][j - 1]) + int(m2[i][j])) % 2
+    for i in range(0, len(m1)):
+        global m4
+        global summa_2
+        global summa_1
+        if summa_2 == 0:
+            L.append(1)
+            summa_2 = 0
+            summa_1 = 0
+        else:
+            L.append(0)
+            summa_2 = 0
+
+            # перевод в двоичную СС, проверка полинома Жегалкина на линейность
+        for j in range(0, len(m2[i])):
+            if int(m2[i][j]) == 1:
+                m4.append(bin(j)[2:])
+        for k in range(0, len(m4)):
+            m4[k] = list(m4[k])
+        for j in range(0, len(m4)):
+            summa_1 = 0
+            summa_2 = 0
+            for k in range(0, len(m4[j])):
+                summa_1 += int(m4[j][k])
+            if summa_1 > 1:
+                summa_2 += 1
+                break
+    print('L', L, sep='  ')
+
+    for i in range(0, len(T0)):
+        global summa_T0
+        summa_T0 += T0[i]
+    for i in range(0, len(T1)):
+        global summa_T1
+        summa_T1 += T1[i]
+    for i in range(0, len(M)):
+        global summa_M
+        summa_M += M[i]
+    for i in range(0, len(L)):
+        global summa_L
+        summa_L += L[i]
+    for i in range(0, len(All)):
+        global summa_All
+        summa_All += All[i]
+    if summa_T0 < len(m1) and summa_T1 < len(m1) and summa_M < len(m1) and summa_L < len(m1) and summa_All < len(m1):  # если есть ф-ии, не лежащие полностью ни в одном из классов Поста
+        print('Полный функциональный набор')
+    else:
+        print('Неполный функциональный набор')
+
+    # создание окна ввода_1
+
+frame = Tk()  # создание окна
+frame.title('PГР 1')  # заголовок окна
+frame.configure(bg='#8B7B8B')  # задание цвета окна
+
+label = Label(frame, text='Введите количество функций:', width=60, height=3, bg='#8B7B8B', fg='black',
+                  font=font_frame)
+label.pack()
+
+entry = Entry(frame, bg='#EED2EE')  # задание поля ввода кол-ва ф-ий
+entry.pack()
+
+button = Button(frame, text='OK', command=click_button, bg='#CDB5CD', anchor='s')  # кнопка
+button.pack()
+
+frame.mainloop()  # бесконечный цикл окна (frame) (для постоянной его видимости)
+
+
