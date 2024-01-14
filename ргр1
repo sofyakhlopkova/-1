@@ -3,8 +3,6 @@ from tkinter import *
 
 # переменные
 
-font_frame = ("Comic Sans MS", 20, "bold")  # шрифт окон
-
 summa = 0
 summa_1 = 0
 summa_2 = 0
@@ -23,7 +21,7 @@ L = []
 count = 0  # счетчик
 
 # вспомогательная переменная для проверки на принадлежность к классу L
-q = -1
+b = -1
 
 # вспомогательные массивы
 m1 = []
@@ -34,16 +32,17 @@ m4 = []
 
 def click_button():
     global count  # поиск count по всему коду
-    a = int(entry.get())  # перевод значения из окна ввода в целочисленный тип данных
+    n = int(entry.get())  # перевод значения из окна ввода в целочисленный тип данных
 
     # main_part
 
     # если введен 0
-    if a == 0 or a < 0:
+    if n == 0 or n < 0:
         if count == 1:
             label.destroy()
             count = 0
-        label_1 = Label(frame, text='Введите n большее, чем 0', width=50, height=5, bg='#7AC5CD', fg='black', font=font_frame)
+        label_1 = Label(frame, text='Введите n большее, чем 0', width=50, height=5, bg='#7AC5CD', fg='black',
+                        font="20")
         label_1.pack()
         count += 1
 
@@ -53,11 +52,11 @@ def click_button():
         frame_1 = Tk()  # появление окна для ввода ф-ий
         frame_1.configure(bg='#8B7B8B')
         label1 = Label(frame_1, text='Введите функции:', width=60, height=3, bg='#EED2EE',
-                       fg='black', font=font_frame)
+                       fg='black', font="20")
         label1.pack()
 
         # определение кол-ва полей ввода
-        for i in range(0, a):
+        for i in range(0, n):
             label_2 = Label(frame_1, text=f'Ввод булевой функции {i + 1} (состоит из 0 и 1):', bg='#8B7B8B')
             label_2.pack(anchor='nw', padx=230)
             entry_1 = Entry(frame_1, bg='#DECDF5')
@@ -69,29 +68,30 @@ def click_button():
 
 def click_button_1():
     for i in range(0, len(m1)):
-            m3.append(list(m1[i].get()))
-            m2.append(list(m1[i].get()))
-            # проверка числа элементов (все векторы имеют длину, равную степени 2)
-            for i in range(0, len(m1)):
-                a = math.log(len(m2[i]), 2)
-                # проверка целочисленности
-                if a.is_integer() is False or a == 0.0:
-                    frame_4 = Tk()
-                    frame_4.configure(bg='#8B7B8B')
-                    label_3 = Label(frame_4, text='Неверная форма ввода булевых функций', width=50, height=5, bg='#7AC5CD', fg='black', font=font_frame)
-                    label_3.pack()
-                    break
-        # проверка, что ввели только нули и единицы
+        m3.append(list(m1[i].get()))
+        m2.append(list(m1[i].get()))
+        # проверка числа элементов (все векторы имеют длину, равную степени 2)
+    for i in range(0, len(m1)):
+        a = math.log(len(m2[i]), 2)
+        # проверка целочисленности
+        if a.is_integer() is False or a == 0.0:
+            frame_4 = Tk()
+            frame_4.configure(bg='#8B7B8B')
+            label_3 = Label(frame_4, text='Неверная форма ввода булевых функций', width=50, height=5, bg='#7AC5CD',
+                                fg='black', font=font_frame)
+            label_3.pack()
+            break
+    # проверка, что ввели только нули и единицы
     for i in range(0, len(m1)):
         for j in range(0, len(m2[i])):
             if int(m2[i][j]) != 0 and int(m2[i][j]) != 1:
                 frame_4 = Tk()
                 frame_4.configure(bg='#8B7B8B')
                 label_3 = Label(frame_4, text="Неверная форма ввода булевых функций", width=50, height=5,
-                               bg="#7AC5CD", fg="black", font=font_frame)
+                                bg="#7AC5CD", fg="black", font=font_frame)
                 label_3.pack()
                 break
-# проверка на принадлежность к классам Поста
+    # проверка на принадлежность к классам Поста
     # класс T0
     for i in range(0, len(m1)):
         if int(m2[i][0]) == 0:
@@ -142,10 +142,10 @@ def click_button_1():
 
     # класс L
     for i in range(0, len(m1)):  # находим полином Жегалкина
-        global q
+        global b
         for k in range(0, len(m2[i])):
-            q += 1
-            for j in range(len(m2[i]) - 1, q, - 1):
+            b += 1
+            for j in range(len(m2[i]) - 1, b, - 1):
                 m2[i][j] = (int(m2[i][j - 1]) + int(m2[i][j])) % 2
     for i in range(0, len(m1)):
         global m4
@@ -190,26 +190,27 @@ def click_button_1():
     for i in range(0, len(All)):
         global summa_All
         summa_All += All[i]
-    if summa_T0 < len(m1) and summa_T1 < len(m1) and summa_M < len(m1) and summa_L < len(m1) and summa_All < len(m1):  # если есть ф-ии, не лежащие полностью ни в одном из классов Поста
+    if summa_T0 < len(m1) and summa_T1 < len(m1) and summa_M < len(m1) and summa_L < len(m1) and summa_All < len(
+            m1):  # если есть ф-ии, не лежащие полностью ни в одном из классов Поста
         print('Полный функциональный набор')
     else:
         print('Неполный функциональный набор')
 
     # создание окна ввода_1
 
+
 frame = Tk()  # создание окна
-frame.title('PГР 1')  # заголовок окна
 frame.configure(bg='#8B7B8B')  # задание цвета окна
 
 label = Label(frame, text='Введите количество функций:', width=60, height=3, bg='#8B7B8B', fg='black',
-                  font=font_frame)
+              font="20")
 label.pack()
 
 entry = Entry(frame, bg='#EED2EE')  # задание поля ввода кол-ва ф-ий
 entry.pack()
 
-button = Button(frame, text='OK', command=click_button, bg='#CDB5CD', anchor='s')  # кнопка
-button.pack()
+btn = Button(frame, text='OK', command=click_button, bg='#CDB5CD', anchor='s')  # кнопка
+btn.pack()
 
 frame.mainloop()  # бесконечный цикл окна (frame) (для постоянной его видимости)
 
