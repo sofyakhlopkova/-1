@@ -78,7 +78,7 @@ def click_button_1():
             frame_4 = Tk()
             frame_4.configure(bg='#8B7B8B')
             label_3 = Label(frame_4, text='Неверная форма ввода булевых функций', width=50, height=5, bg='#7AC5CD',
-                                fg='black', font=font_frame)
+                                fg='black', font="20")
             label_3.pack()
             break
     # проверка, что ввели только нули и единицы
